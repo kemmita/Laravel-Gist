@@ -1,0 +1,13 @@
+ //we are using the listing id to pull up the correct lsiting when it is clicked on, with the majorioty of links we would need
+ //to provide the method after the controller and its id for example /listings/{{$listing->id}}/edit but for show we do not have to
+ @if(count($listings))
+                                <ul class="list-group">
+                            @foreach($listings as  $listing)
+                                    <li class="list-group-item"><a href="/listings/{{$listing->id}}">{{$listing->name}}</a></li>
+                            @endforeach
+                                </ul>
+
+
+                        @else
+                            <p>No Listings Found.</p>
+                    @endif

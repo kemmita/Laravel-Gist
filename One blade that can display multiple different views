@@ -1,0 +1,37 @@
+start off in the index file or wehatever you want to call it
+  <div class="well">
+  //below you can see that the href is linked to our todo and the id that will be displayed, this will then be sent to the route
+                <h3><a href="todo/{{$todo->id}}">{{$todo->text}}</a></h3>
+                <span class="label label-danger">{{$todo->due}}</span>
+
+            </div>
+
+
+//route, remeber that route resource provides all of our crud methods so the id being passed will pass into the function that takes a param
+//of $id
+Route::resource('todo', 'TodoController');
+
+
+//controller, we want to display the data so we use the show method within the controller
+    public function show($id)
+    {
+    //search database to find the correct id
+        $todo = Todo::find($id);
+//send the id and its associated data to the view we specify below
+        return view('todos.show')->with('todo', $todo);
+    }
+    
+ 
+ //show blade that displays the message depending on the id
+ @extends('layouts.main')
+@section('content')
+
+    <h1 class="text-center">Remember That...</h1>
+    <p class="text-center alert alert-warning">
+    {{$todo->body}}
+    </p>
+
+
+    @endsection
+    
+   

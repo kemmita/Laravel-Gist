@@ -1,0 +1,35 @@
+//first thing that needs to allways be done is to create a route as this is how the user will be directed
+
+//go into web.php routes
+//this is telling use that when the url reads /messages go first to the Messages Con troller to grab a function of getMessage
+Route::get('/messages', 'MessagesController@getMessages');
+
+//now go into the controller to create the function
+//at the top of the controller you must include the Message model in order to interact with the database.
+ public function getMessages(){
+        //we create a variable that will take all messages from the database just like select * from Message
+        $messages = Message::all();
+        //once the data has been grabed, return a view along with the message variable and and its contents
+        return view('messages')->with('messages', $messages);
+    }
+    
+//create your view 
+
+@extends('layout.mainlayout')
+
+@section('content')
+    <h1>Messages</h1>
+//first we need to verify that messages exist so we use an if statement, we verify this by using the variable from our controller, if you
+//rememeber above we returned a view "with" our $messages variable and that is how we are able to check for messages within outr view.
+    @if(count($messages) > 0)
+//then we simply use a foreach loop to loop through the messages. 
+        @foreach($messages as $message)
+                <ul class="list-group">
+                    <li class="list-group-item">Name: {{$message->name}}</li>
+                    <li class="list-group-item">Email: {{$message->email}}</li>
+                    <li class="list-group-item">Message: {{$message->message}}</li>
+                </ul>
+            @endforeach
+    @endif
+
+    @endsection

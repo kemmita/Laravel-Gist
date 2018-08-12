@@ -1,0 +1,17 @@
+//in order to keep someone from using a link to get to a page that requires a password, we must create this constructor function below.
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class BookmarksController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function index(){
+        return view('home');
+    }
+}

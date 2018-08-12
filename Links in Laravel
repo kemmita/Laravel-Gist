@@ -1,0 +1,10 @@
+//when linking to another page we have to only link from the view, so we just provide the name of the blade. if it was nested within 
+//another folder, you would have to do example.contact, which equals example/contact before we do that we have to setup a route so
+//the link will work
+<a href="creem" class="btn btn-success">Working</a>
+
+//now the only reason that href is working above is becuase we declare that /cream will return view todos.creem
+//typically it would just be creem, but becuase creem is in the todos folder we need to include the todos folder
+route::get('/creem', function (){
+   return view('todos.creem');
+});

@@ -1,0 +1,20 @@
+creating a restful update in Laravel can be tricky so we need to call a post request but supplu a hidden filed of PUT
+ public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'text' =>  'required'
+        ]);
+        //if the request fails print this message
+        if($validator->fails()){
+            $response = array('response' => $validator->messages(), 'success' => false);
+            return $response;
+        }else{
+            //if the post request is good find the item in the table
+            $item = Item::find($id);
+            $item->text = $request->input('text');
+            $item->body = $request->input('body');
+            //save data
+            $item->save();
+            return response()->json($item);
+        }
+    }

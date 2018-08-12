@@ -1,0 +1,105 @@
+if directions below are weird go to https://laravelcollective.com/docs/master/html
+run command composer require "laravelcollective/html":"^5.5.0"
+Next, add your new provider to the providers array of config/app.php:
+Collective\Html\HtmlServiceProvider::class,
+//at the verry end of providers make the last line before the curly brace
+ App\Providers\FormServiceProvider::class,
+then in the same file, find aliases and add   
+'Form' => Collective\Html\FormFacade::class,
+'Html' => Collective\Html\HtmlFacade::class,
+
+then run command php artisan make:provider FormServiceProvider
+open app/Providers/FormServiceProvider and go to the boot function and make sure it looks like mine below. Make sure
+//above class FormServiceProvider extends ServiceProvider you write use Form;
+
+    public function boot()
+    {
+        Form::component('bsText', 'components.form.text', ['name', 'value' => null, 'attributes' => []]);
+    }
+
+
+//then go to views and create a new folder called componenets
+//inside of that folder create another folder called form and add a blad called text
+text blade should look like below
+<div class="form-group">
+    {{ Form::label($name, null, ['class' => 'control-label']) }}
+    {{ Form::text($name, $value, array_merge(['class' => 'form-control'], $attributes)) }}
+</div>
+
+//then go to our create blade and make sure it looks like this
+@extends('layouts.main')
+@section('content')
+        <h1 class="text-center">Create a New Todo</h1>
+        {!! Form::open(['action' => 'TodoController@store', 'method' => 'POST']) !!}
+        {{--we call it text because that is the actual title of the field in the database.--}}
+        {{ Form::bsText('text') }}
+        {!! Form::close() !!}
+    @endsection
+    
+    
+    
+    
+    
+    
+    
+//now we have created one field, now lets create one for email,
+1. go back into FormServiceProvider and add to the boot function again
+Form::component('bsText', 'components.form.text', ['name', 'value' => null, 'attributes' => []]);
+**bsText is what kind of field it will be, if we wanted a text area, it would be bsTextArea and then components.form.textarea*******
+
+
+2. go back to views/componenets/form and create a blade called email and add code below, nothing about email is entered here. just data type tezt
+<div class="form-group">
+    {{ Form::label($name, null, ['class' => 'control-label']) }}
+    {{ Form::text($name, $value, array_merge(['class' => 'form-control'], $attributes)) }}
+</div>
+
+3. lastley go back into create blade 
+
+        {!! Form::open(['action' => 'TodoController@store', 'method' => 'POST']) !!}
+        {{ Form::bsText('text') }}
+        //below is where you specify the name Email, that always comes out capitalized. 
+        {{ Form::bsText('email') }}
+        {{ Form::bsTextArea('body') }}
+        {!! Form::close() !!}
+
+
+
+//now we want to create a button 
+1. go back into FormServiceProvider and add to the boot function again
+Form::component('bsSubmit', 'components.form.submit', ['name', 'value' => 'Submit', 'attributes' => []]);
+
+2. go back to views/componenets/form and create a blade called Submit
+<div class="text-center">
+    {{Form::submit($value, $attributes)}}
+</div>
+
+3. lastley go back into create blade 
+{!! Form::open(['action' => 'TodoController@store', 'method' => 'POST']) !!}
+        {{ Form::bsText('text') }}
+        {{ Form::bsTextArea('body') }}
+        {{ Form::bsText('due') }}
+        {{ Form::bsSubmit('submit') }} //here is our button!
+        {!! Form::close() !!}
+
+
+//to do controller
+ public function store(Request $request)
+    {
+        $this->validate($request, [
+            'text' => 'required',
+            'body' => 'required',
+            'due' => 'required'
+        ]);
+
+        //create new todos
+        $todo = new Todo;
+        $todo->text = $request->input('text');
+        $todo->body = $request->input('body');
+        $todo->due = $request->input('due');
+
+        //save query
+        $todo->save();
+
+        return redirect('/')->with('success', 'Todo Saved');
+    }

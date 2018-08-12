@@ -1,0 +1,15 @@
+//in routes define your path
+Route::resource('todo', 'TodoController');
+
+//blade, below you see the href todo/id this is to reference the route above
+  <h3><a href="todo/{{$todo->id}}">{{$todo->text}}</a></h3>
+  
+  
+  
+ //we then are sent to our controller to query the database
+  public function show($id)
+    {
+        $todo = Todo::find($id);
+
+        return view('todos.show')->with('todo', $todo);
+    }

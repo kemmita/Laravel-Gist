@@ -1,0 +1,38 @@
+0. Do this with transfered application, taking over an old app
+1. Have the correct file path open in Gitbash and then run "composer install"
+2. Go to your env.example file and rename it .env then make sure to create a new db in phpmyadmin, once you have created the db fill out
+the needed info within the .env file. Below is an example.
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=exampledbname
+DB_USERNAME=russell
+DB_PASSWORD=password 
+
+3. Then run php artisan key:generate. 
+4. Then go to app/Providers/AppServiceProvider.php and make sure it looks just like mine below
+
+namespace App\Providers;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        Schema::defaultStringLength(191);
+    }
+    public function register()
+    {
+    }
+}
+
+5. Then run command php artisan migrate
+6. Go to phpmyadmin to verify that all is well!
+
+
+
+
+**Mass Assignment Error**
+
+0. if you get this go into the model and declare the protected $fillable = ['', ];

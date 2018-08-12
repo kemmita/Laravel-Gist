@@ -1,0 +1,40 @@
+//this will return the first entry 
+ $user = User::first();
+//this will retireve all users
+$user = User::all();
+
+//now we can add some additional logic when adding additioanl constraints you must use get at the end
+we could check names, verify ages use > < != = 
+public function name(){
+        $user = User::where('id', '=', 2)->get();
+
+        return view('test')->with('user', $user);
+    }
+    
+//here we use several wheres to add constraints to our query
+  public function name(){
+        $task = Tasktwo::where('completed', '=',  0)->where('id', '=', 1)->get();
+        //below is the same thing as the one aboce
+         $task = Tasktwo::where('completed', 0)->where('id', 1)->get();
+
+        return view('test')->with('task', $task);
+    }
+    
+Adding Additional Constraints
+you may also add constraints to queries, and then use the get method to retrieve the results:
+
+$flights = App\Flight::where('active', 1)
+               ->orderBy('name', 'desc')
+               ->take(10)
+               ->get();
+  
+//if we want to return just on specific column from the table we can use the eloquent "pluck"
+//this will only return the email
+ public function name(){
+        $user = User::pluck('email');
+
+        return view('test')->with('user', $user);
+    }
+    
+    
+ 

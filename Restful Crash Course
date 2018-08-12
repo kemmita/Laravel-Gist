@@ -1,0 +1,47 @@
+for banks
+
+
+GET we would visit /banks to see all the banks
+Route::get('/bank', 'BankCOntroller@index');
+  public function index(){
+        $bank = Bank::all();
+        return view('bank')->with('bank', $bank);;
+    }
+
+
+GET we would visit /banks/create to fill out a form for a new one
+Route::get('/bank/create', 'BankController@create');
+public function create(){
+            return view('createbank');
+    }
+ 
+POST that form would be submitted to action="/bank" method="POST" which would then go to function store within the controller to isert the data
+//because we are usging post request, our URI can be the same line 5
+Route::post('/bank', 'BankCOntroller@store');
+    public function store(Request $request){
+        $this->validate($request, [
+          'title'=> 'required',
+            'body' => 'required'
+        ]);
+        $banks = new Bank;
+        $banks->title = $request->input('title');
+        $banks->body = $request->input('body');
+        $banks->save();
+       return redirect('/bank')->with('success', 'success');
+    }
+    
+ 
+GET to view the file we will need the pass the id of the object to the route
+notice below how the id differs from the route to the blade link
+Route::get('/bank/{id}', 'BankController@show');
+to get that id do this in the link you click    <a href="/bank/{{$b->id}}/"><p>{{ $b->body }}</p></a>
+  public function show($id)
+    {
+        $b = Bank::find($id);
+        return view('showbank')->with('b', $b);
+    }
+
+
+
+
+GET to edit a bank we would do /banks/{id}/edit when you sbmit that for it would sbumit a Patch to /banks/{id}

@@ -1,0 +1,40 @@
+//First Create a view that displays the serch box
+searchpage.blade
+@extends('layouts.app')
+@section('content')
+    <form action="{{URL::to('/search')}}" method="POST" role="search" class="form-group">
+        {{ csrf_field() }}
+        <input class="form-control" type="text" name="q" placeholder="Search">
+<button type="submit" class="btn btn-default">Search</button>
+    </form>
+
+    @endsection
+
+
+//now create a route for search for line 5
+//notice how its a post
+Route::post('/search', 'SearchController@search');
+
+//next create your search controller and the search function
+  public function search(){
+       $q = Input::get('q');
+       if($q != ''){
+           $listing = Listing::where('name', 'LIKE', '%' . $q . '%')->get();
+           if(count($listing) > 0){
+               return view('searchresult')->with('listing', $listing);
+           }
+       }
+       return "no data found";
+
+
+    }
+ 
+
+//create view search results to take on the data from line 24
+//notice how we make the result a link along with its id, this will allow us to be brought to its main page
+@extends('layouts.app')
+@section('content')
+    @foreach($listing as $list)
+        <a href="/listings/{{$list->id}}">{{ $list->address }}</a>
+    @endforeach
+    @endsection

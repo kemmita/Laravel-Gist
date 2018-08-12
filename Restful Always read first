@@ -1,0 +1,8 @@
+when working with API reguests, we have to disable our functions within the csrf token so they can work properly.
+//first go to our routes and look at our route anything with api/ we must disable csrf protection
+Route::resource('api/items', 'ItemsController');
+
+//now go to Http/Middleware/verifyCsrfToken.php go to the  protected $except array and add the extension you wish to disable
+ protected $except = [
+        'api/*'
+    ];

@@ -1,0 +1,7 @@
+//Laravel comes with an Api called Carbon that helps us display dates and times
+Route::get('/', function () {
+    echo Carbon::now(). "<br>";
+    //7 years from now
+    echo Carbon::now()->addYear(7);
+    //there are way to many functions to list, but everything can be looked up in the documentation.
+});

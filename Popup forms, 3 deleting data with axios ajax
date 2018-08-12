@@ -1,0 +1,13 @@
+
+
+run npm install in cmnd line
+//first install axios
+npm install --save axios
+
+//now go into resources/assets/js and open app.js and add a custom js file
+require('./custom');
+
+
+now run npm run watch
+//now create the custom js file in resources/assets/js
+

@@ -1,0 +1,58 @@
+//it begins with the view and a button that says update
+//the href is being directed to our crud controller with the id of the form followed by the todo controller methtod 'edit'
+<a class="btn btn-primary pull-left" href="/todo/{{$todo->id}}/edit">Edit</a>
+
+//now go to our controller and find the edit method
+//the method below is taking the id that was passed above with the button. we then query the database for the correct form id
+//then we will return a view along with the id of the form that needs to be updated
+    public function edit($id)
+    {
+       $todo = Todo::find($id);
+        return view('todos.edit')->with('todo', $todo);
+
+    }
+
+
+//now go to app/providers and find the boot function to add a new custom component 
+ Form::component('hidden', 'components.form.hidden', ['name', 'value' => null, 'attributes' => []]);
+ 
+
+//now go to our views/components/form and cretae a new blade called hidden and all we need in this blade is the code below
+{{Form::hidden($name, $value, $attributes)}}
+ 
+
+//now lets create the todos.edit blade from abpve
+@extends('layouts.main')
+@section('content')
+    <h1 class="text-center">Edit this Todo!</h1>
+//change to update for the controller method below, followed by the form id
+    {!! Form::open(['action' => ['TodoController@update', $todo->id], 'method' => 'POST']) !!}
+//now we need to pass in values as the second parameter, this way the fields of the uodate from will be prepulated with the existing data
+//that needs to be updated.
+    {{ Form::bsText('text', $todo->text) }}
+    {{ Form::bsTextArea('body', $todo->body) }}
+    {{ Form::bsText('due', $todo->due) }}
+//we could not use the PUT method above so we have to create a custom component for method put to work, so go to form service provider 
+    {{ Form::hidden('_method', 'PUT') }}
+    {{ Form::bsSubmit('submit', ['class' => 'btn btn-primary pull-right']) }}
+    <a class="btn btn-warning" href="/todo/{{$todo->id}}">Back</a>
+@endsection
+
+//above the form has an action of going to the uodate method of our controller, so lets go back to our controller and find update method
+    public function update(Request $request, $id)
+    {
+        $todo = Todo::find($id);
+        $todo->text = $request->input('text');
+        $todo->body = $request->input('body');
+        $todo->due = $request->input('due');
+
+        //save query
+        $todo->save();
+
+        return redirect('/')->with('success', 'Todo Updated');
+    }
+
+
+
+ 
+ 

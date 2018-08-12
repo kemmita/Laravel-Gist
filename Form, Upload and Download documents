@@ -1,0 +1,73 @@
+//for your database, the file will be saved as a string like below
+Schema::table('listings', function ( $table) {
+            $table->string('docufile');
+
+        });
+ 
+ //now go to your form
+    {{--'enctype' => 'multipart/data' will give us a file upload button we need both 'enctype' => 'multipart/form-data' and 'files'=>'true' to upload documents--}}
+                    {!! Form::open(['action' => 'ListingsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data', 'files'=>'true']) !!}
+                        {{Form::bsText('name', '',['placeholder' => 'Company Name'])}}
+                        {{Form::bsText('email', '',['placeholder' => 'Contact Email'])}}
+                        {{Form::bsText('website', '',['placeholder' => 'Contact Email'])}}
+                        {{Form::bsText('phone', '',['placeholder' => 'Contact Phone'])}}
+                        {{Form::bsText('address', '',['placeholder' => 'Contact Address'])}}
+                        {{Form::bsTextArea('bio', '',['placeholder' => 'About the Business'])}}
+
+                        <div class="form-group">
+                            <label for="pic">Upload Image</label>
+                            {{Form::file('picture'),['id' => 'pic']}}
+                        </div>
+                    <div class="form-group">
+                        <label for="docufile">Upload Associated Documentation</label>
+                        {{Form::file('docufile'),['id' => 'docufile']}}
+                    </div>
+
+
+                    <br>
+                        {{Form::bsSubmit('submit', ['class' => 'btn btn-success'])}}
+                    {!! Form::close() !!}
+          
+      
+ //next run this command to create local storage file 
+  php artisan storage:link
+  
+  
+  //now move to your controller
+  public function store(Request $request)
+    {
+        $this->validate($request, [
+            'docufile' => 'required|max:10000|mimes:doc,docx,txt,pdf,csv'
+        ]);
+   
+        if($request->hasFile('docufile')){
+                //get file with extension
+                $fileNameWithExt = $request->file('docufile')->getClientOriginalExtension();
+                //get just file name
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                //get just extension
+                $extension = $request->file('docufile')->getClientOriginalExtension();
+                //filename to store
+                $fileNameToStoreTwo = $fileName.'_'.time().'.'.$extension;
+                //upload image
+                $path = $request->file('docufile')->storeAs('public/documentation', $fileNameToStoreTwo);
+            }else{
+                $fileNameToStoreTwo = "nothing.txt";
+            }
+
+        $listing = new Listing;
+    
+        $listing->docufile = $fileNameToStoreTwo;
+       
+
+        $listing->user_id = auth()->user()->id;
+
+        $listing->save();
+
+        return redirect('/dashboard')->with('success', 'Listing Created successfully');
+
+    }
+    
+    
+    //now that you have it uploaded, here is how you download it
+   <a href="/storage/documentation/{{$listing->docufile}}" download="{{$listing->docufile}}" class="downloadIt"><button>Download Docs</button></a> 

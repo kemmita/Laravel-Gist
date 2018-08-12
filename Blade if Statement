@@ -1,0 +1,16 @@
+<div class="container">
+//having a main layout means that all views that extend from it will show the same data. If we wanted only one page to utilize the
+//showcase include, we could setup a laravel if statement the request object checks to make sure the extensiont cantact is used
+//if the url is example.com/contact the include showacase will appear if the url is different, it will not
+    @if(Request::is('contact'))
+   @include('include.showcase')
+    @endif
+    <div class="row">
+        <div class="col-md-8 col-lg-8">
+            @yield('content')
+        </div>
+        <div class="col-md-4 col-lg-4">
+            @include('include.sidebar')
+        </div>
+    </div>
+</div>

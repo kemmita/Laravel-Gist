@@ -1,0 +1,4 @@
+ //this is how you can protect your site pages fom being visited 
+ public function __construct(){
+    $this->middleware('auth', ['except' => ['index', 'show']]);
+}

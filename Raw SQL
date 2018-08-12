@@ -1,0 +1,43 @@
+**Insert**
+//route
+Route::get('/insert', 'PostController@insert');
+//controller
+public function insert(){
+    DB::insert('insert into posts(title, body, is_admin) values(?, ?, ?)', ['Tuesday', 'Tuesday was a good day', 3]);
+    return view('insert');
+}
+
+
+**show**
+//route
+Route::get('/show', 'PostController@show');
+
+//controller
+
+public function show(){
+    $data = DB::select('select * from posts where id=?', [1]);
+
+    return view('show');
+}
+
+
+
+**update**
+//route
+Route::get('/update', 'PostController@update');
+//controller
+public function update(){
+    $update = DB::update('update posts set title = "Update title" where id = ?', [1]);
+    //ignore the view name below just using for example
+    return view('insert');
+}
+
+**delete**
+//route
+Route::get('/delete', 'PostController@delete');
+//controller
+public function delete(){
+    $deleted = DB::delete('delete from posts where id = ?' [1]);
+return $deleted;
+}
+

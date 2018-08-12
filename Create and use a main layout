@@ -1,0 +1,27 @@
+If you would like to avoid typing out all of the general html code every blade, then we can create a layout. Go to views, add a new folder
+called layout and add a new file called mainlayout. below is what the layout will look like
+
+{{--remember that you must include this ineach blade so you can use it--}}
+
+<!doctype html>
+<html lang="{{ app()->getLocale() }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+{{--the only thing to mention at this time, is that @yield content will place the blades we will create inside of the main layout--}}
+    @yield('content')
+</body>
+</html>
+
+
+If you wish to use your main layout go to your blades and add @extends('layout.mainlayout') at the top of the file.
+If you look at line 16 above it says yield content so in order for us to grab content we have to use section tags to grab the code.
+notice how we name the sction "content" now the h1 tag surrounded by the section tags will be yielded by the main layout
+@extends('layout.mainlayout')
+@section('content')
+<h1>home</h1>
+@endsection

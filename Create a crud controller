@@ -1,0 +1,9 @@
+php artisan make:controller TodoController --resource
+will create a controller with the crud methods allready there
+
+//then go to routes and add resource this will take care of update, delete and all that stuff, other wise we would have to create
+//Route::get('todo', TodoController@update);, Route::resource('todo', TodoController@delete);
+//but with the code below that is all taken care of 
+Route::resource('todo', TodoController);
+
+//if you want to see all the functions that are shipped with it and how to use them, use command php artisan route:list

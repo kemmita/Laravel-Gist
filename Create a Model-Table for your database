@@ -1,0 +1,21 @@
+php artisan make:model Message -m
+
+go to your migration that was created and add the columns that need to be added.
+
+
+
+    public function up()
+    {
+        Schema::create('messages', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email');
+            $table->mediumText('message');
+            $table->timestamps();
+        });
+    }
+    
+    
+    
+    then run command php artisan migrate
+    go to phpmyadmin to verify all is well.

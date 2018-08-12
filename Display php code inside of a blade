@@ -1,0 +1,6 @@
+{{--I wanted to show a comparrision of how things can be displayed in the view using normal php tags and using Laravel
+double curly braces. This is the two ways we can display php code inside of a blade.--}}
+                {{Form::label('email', 'E-Mail Address')}}
+                <?php
+                    echo Form::text('email', '', ['class' => 'form-control', 'placeholder' => 'email']);
+                ?>

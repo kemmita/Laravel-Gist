@@ -1,0 +1,5 @@
+run
+php artisan make:migration add_admin_column_to_posts_table --table="posts"
+
+add the neccessary column to the migration file and then run the migration command
+php artisan migrate

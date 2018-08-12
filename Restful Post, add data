@@ -1,0 +1,27 @@
+//we cannot validat data like with a normal view so we need to include the Validatior
+namespace App\Http\Controllers;
+
+use App\Item;
+use Illuminate\Http\Request;
+use Validator;
+
+//now go to the store function and create your validator function
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+           'text' =>  'required'
+        ]);
+        //if the request fails print this message
+        if($validator->fails()){
+            $response = array('response' => $validator->messages(), 'success' => false);
+            return $response;
+        }else{
+            //if the post request is good create a object of the table and insert your data
+            $item = new Item;
+            $item->text = $request->input('text');
+            $item->body = $request->input('body');
+            //save data
+            $item->save();
+            return response()->json($item);
+        }
+    }

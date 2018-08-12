@@ -1,0 +1,19 @@
+//in order to grab data from our database and send it to our api, we will be using json
+//go into ItemsController and include the Item model so we can grabd data from  that table
+
+
+//this first method will return all of the data stored within the databse
+ public function index()
+    {
+        //grab all data from the items table in the database
+        $items = Item::all();
+        return response()->json($items);
+    }
+    
+//this second method will return one item from the database
+ public function show($id)
+    {
+        $item = Item::find($id);
+        return response()->json($item);
+
+    }

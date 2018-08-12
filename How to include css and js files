@@ -1,0 +1,18 @@
+go to your main layout and inlcude the js and css file like you would with any other html file.
+now the trick is to place your css file in public/css and then name it style.css
+then for js go to public/js and then name it script.js
+<!doctype html>
+<html lang="{{ app()->getLocale() }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+{{--the only thing to mention at this time, is that @yield content will place the blades we will create inside of the main layout--}}
+@yield('content')
+@include('include.sidebar')
+<script src="js/script.js"></script>
+</body>
+</html>

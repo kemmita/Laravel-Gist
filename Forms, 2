@@ -1,0 +1,66 @@
+//now that we have created our route we must create the controller and method we specified in the route belwo
+Route::post('/contact/submit', 'MessagesController@submit');
+
+run command php artisan make:controller MessagesController 
+
+
+//inside of MessagesController
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Message;
+class MessagesController extends Controller
+{
+// we are going to use the method below to request data from the form being submitted. If you look above, you will see
+// use Illuminate\Http\Request; we use that Request to create a variable that we will call $request
+    public function submit(Request $request)
+    {
+        //this will take the laravel validate function and make sure that the name field and email field
+        //have been filled. if not an error msg will appear, but we need to go to our main layout to see how
+        $this->validate($request, [
+           'name' => 'required',
+            'email' => 'required'
+        ]);
+
+        //create new message
+        $message = new Message;
+        $message->name = $request->input('name');
+        $message->email = $request->input('email');
+        $message->message = $request->input('message');
+
+        //save message
+        $message->save();
+
+        //redirect
+        return redirect('/')->with('success', 'Message Sent');
+    }
+}
+
+
+//inside of the main layout, all we had to do was add an include at the top of the container.
+@include('include.messages')
+
+//then go into your messages blade within your include directory 
+{{--using the laravel count function, we will verify if the laravel $errors variable is greater then0
+if it is, we run a for each loop and display all erros within a bootstrap class --}}
+@if(count($errors) > 0)
+    @foreach($errors->all() as $error)
+        <div class="alert alert-danger">
+            {{$error}}
+        </div>
+        @endforeach
+    @endif
+    
+//on line 37 above you see that we are attaching a flash meessage to our redirect. The code below will run and be excuted in our message
+//inlcude if the form was submitted succesfully 
+@if(session('success'))
+    <div class="alert alert-success">
+        {{session('success')}}
+    </div>
+    @endif
+
+
+    
+ 

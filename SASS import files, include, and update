@@ -1,0 +1,18 @@
+go to resources/assets/sass and create a file called _custom.scss then go to app.scss and use the import code below
+
+// Custom
+@import "custom";
+
+
+//then go into your mainlayout and include the ocde below in the head
+<link href="css/app.css" rel="stylesheet">
+
+//if you remember we placed our custome sass in file path resources/assets/sass but this actually gets placed automatically in 
+public/css/app.css
+
+
+//now if you make any style changes to the sass file, you must run a npm command either in your storm terminal or cmnd line
+//make sure you have the ocrrect file path if this command does not work simply close and open the cmnd termianl. the cmnd is
+"npm run dev"
+
+//when making a lot of stylke changes, run npm run watch and node will keep up with changes you are making.

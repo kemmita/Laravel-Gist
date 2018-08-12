@@ -1,0 +1,17 @@
+//instead of verifing constraints in the controller we can create query scopes in the model
+
+//in our model add the param $query so it knows to grab data from the database
+//we must name it scope and then something added so scopeIncomplete will become Incomplete in the controller
+public function scopeIncomplete($query){
+        return $query->where('completed', '=',  0);
+    }
+ 
+//in the controller
+//see on line 13 we stripped the keyword scope and called our fucntion Incomplete, we then added additional constraints usign the 
+//where keyword
+ public function name(){
+
+            $task = Tasktwo::Incomplete()->where('id', 1)->get();
+
+        return view('test')->with('task', $task);
+    }

@@ -1,0 +1,3 @@
+Tinker can help with the database and inserting dummy data and sorting through data if needed. It is a command line tool and
+can be accessed vie php artisan tinker, you first typically create a variable of the model/tabel you want to work with such as
+$todo = new App\Todo();

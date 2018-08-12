@@ -1,0 +1,22 @@
+//I like this way the best
+<a href="{{route('comments.index')}}" class="btn btn-warning btn-xs">Submit</a>
+
+so we are in a view and click a link to direct us to a new page
+<li><a href="todo/create">New Todo</a></li>
+
+
+
+
+//starting at the routes again you see that the url in the resource is todo and we know this resource is going to come packed with
+// show, create, index and more. so if we wanted to create a button that would take us to a page to create something new, like
+//a new message, we would have our href like this todo/create this url will then trasnfer to the TodoController and go right to create function
+Route::resource('todo', 'TodoController');
+
+//controller, typically this would just say create but our view is in a sub folder called todos
+   public function create()
+    {
+        return view('todos.create');
+    }
+ 
+    
+ 

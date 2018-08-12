@@ -1,0 +1,85 @@
+//first we need to enable cors so we can fecth data from a different server via ajax.go to https://github.com/barryvdh/laravel-cors
+//and install it via composer, use command composer require barryvdh/laravel-cors
+
+//then go to config/app.php and add Barryvdh\Cors\ServiceProvider::class, to providers.
+
+//then go into your app/http/Kernal
+protected $middleware = [
+    // ...
+    \Barryvdh\Cors\HandleCors::class,
+];
+
+
+
+go into htdocs and create a new folder and add an index.html file 
+//index.html we included nesseccary bootstrap libraries and we must include a jquery cdn so we can grab the data from our api we built
+//in the backend of laravel
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Item Manager</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+    <body>
+           <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Item Manager</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+       <div class="container">
+<!--we are going to fetch the data from the api we created in the controller and insert the items dynamically withy jquery and js-->
+              <ul id="items" class="list-group"></ul>     
+       </div>
+        <script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script>
+        
+        <!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+ //script.js below is where we are going to pull all of our data from
+   <script src="script.js"></script>
+    </body>
+</html>
+
+
+//script.js
+$(function(){
+    getItems();
+    //get items from api
+    function getItems(){
+        //making a call to our api
+        $.ajax({
+            url:'http://localhost:8000/api/items'
+        }).done(function(items){
+            //create a limited variable and set it to nothing
+            let output = '';
+            //use jquery each loop to grab items from the database, this is the actual name of the columns.
+            $.each(items, function(key, item){
+                output += `
+                <li class="list-group-item">
+                    <strong>${item.text}: </strong>${item.body}
+                </li>
+`;
+                
+            });
+//we created a bootstrap list with an id of items, we wil now append list items from the database 
+            $('#items').append(output);
+        });
+    }
+});

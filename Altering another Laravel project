@@ -1,0 +1,25 @@
+
+0
+down vote
+favorite
+I need to alter some of the front-end features of a Laravel application that was not created by me. The application was created using Laravel and am not sure how to get it up and running so I can alter the front-end code. I was given a copy of the source files. I then put that source files in to my xampp/htdocs folder. I started xampp, opened the folder in gitbash and entered php artisan serve. The application does not appear to be running. Is there something I am missing or doing wrong? Please take into consideration that I did not create this application, for your information, I do know how to create and run a laravel app locally, but am wondering if the proccess is different if it was not created by me personally? Thank you all for helping me out, I appreciate you personally and this community.
+
+here is the error I am recieveing in gitbash
+
+PHP Warning:  require(C:\xampp\htdocs\appoets\bootstrap/../vendor/autoload.php):
+ failed to open stream: No such file or directory in C:\xampp\htdocs\appoets\boo
+tstrap\autoload.php on line 17
+
+Warning: require(C:\xampp\htdocs\appoets\bootstrap/../vendor/autoload.php): fail
+ed to open stream: No such file or directory in C:\xampp\htdocs\appoets\bootstra
+p\autoload.php on line 17
+PHP Fatal error:  require(): Failed opening required 'C:\xampp\htdocs\appoets\bo
+otstrap/../vendor/autoload.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\h
+tdocs\appoets\bootstrap\autoload.php on line 17
+
+Fatal error: require(): Failed opening required 'C:\xampp\htdocs\appoets\bootstr
+ap/../vendor/autoload.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs
+\appoets\bootstrap\autoload.php on line 17
+Hpierce solved this for me. If you run into the same error. Have the correct file path open in gitbash and then run "composer install"
+
+After that was fixed another problem popped up. I went to load laravel in my browser and it gave a general error message no error number or anything. To fix this go to your .env.example file and rename it .env then go to the terminal or your command line and run php artisan key:generate. After this hit save all and go refresh. All should be fixed!

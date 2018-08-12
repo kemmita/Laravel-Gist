@@ -1,0 +1,45 @@
+one user is going to have one user_profile so we need to create a one to one reltionship.
+//first create the models/tables and migrations
+//users migration table
+  Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+        
+//user_profile migration table, to give this a one to one relationship with the user, we must include a user_id column make it unsigned and nullable
+
+ Schema::create('user__profiles', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('profile_name')->nullable();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->timestamps();
+        });
+    
+//now go to User model/table and declare the one to one relationship within a method
+public function userProfile(){
+        return $this->hasOne('App\User_Profile');
+    }
+
+
+//now go to User_Profile Model/table and declare fillables
+protected $fillable = [
+        'profile_name'
+    ];
+ 
+
+
+//test it quick in web.php
+use App\User;
+use App\User_Profile;
+Route::get('/insert', function () {
+    $user = User::findOrFail(1);
+
+    $user_profile = new User_Profile(['profile_name' => 'Russells Profile']);
+    $user->userProfile()->save($user_profile);
+    dd('allgood');
+});
+

@@ -1,0 +1,27 @@
+//first go into config/database.php and replace default mysql with pgsql
+ 'default' => env('DB_CONNECTION', 'pgsql'),
+ 
+//then go into the .env file and where you would connect your mysql, change the connection to pgsql just like you did in the file above
+//then change to pg default port which is 5432 add your database name like normal and typically unles you change it, your username will
+//be postgres. You were forced to create a password for postgres, so add the password you created in the gui
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=marxmanager
+DB_USERNAME=postgres
+DB_PASSWORD=password
+
+
+//next go into your personal computer cdrive/xampp/php
+//then go to php.ini, hit ctrl f and search for pg 
+//you will find the semicolon before them means that they are commented out, so simply remove the semicolons 
+;extension=php_pdo_pgsql.dll
+;extension=php_pgsql.dll
+//so it should look like this
+extension=php_pdo_pgsql.dll
+extension=php_pgsql.dll
+//then go to xampp and restart apache 
+//you can now work with the migrations and database.
+
+

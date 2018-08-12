@@ -1,0 +1,19 @@
+If you wish to have all data be displayed a specfifc way, but it was all stored in a diiferent way, we can use accessors to fix that.
+Lets say someone stores their name as john and the next person as Alex, one is upper and one is lower case if we want them to appear
+the same we can do like I do below
+//route
+Route::get('/getname', 'UserController@getname');
+//controller
+   public function getname(){
+       $user = User::find(1);
+
+       echo $user->name;
+   }
+
+//Model, so between lines 8 and 10 the code below is being executed
+//the name param is beign grabbed from the find function above. 
+//ucfirst will have the first letter of the first word capitalized
+//stroupper will have the whole name capital
+    public function getNameAttribute($name){
+       return ucfirst($name). '<br>'. strtoupper($name);
+    }

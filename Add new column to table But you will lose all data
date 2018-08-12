@@ -1,0 +1,7 @@
+->>>>>>>>>READ FIRST**************************
+
+this will delete all current data in the table you are adding the column to. There is a way to add a column without losing data
+I just use this if I caught the problem early. 
+
+php artisan migrate:refresh
+

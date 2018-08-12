@@ -1,0 +1,5 @@
+ //removed name before value to have the btn class work
+ Form::component('bsSubmit', 'components.form.submit', ['value' => 'Submit', 'attributes' => []]);
+ 
+ //adding boostrap to custom component........class below cooperates with value above
+ {{ Form::bsSubmit('submit', ['class' => 'btn btn-primary']) }}

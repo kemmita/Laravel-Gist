@@ -1,0 +1,14 @@
+make sure you have node js installed from https://nodejs.org/en/
+
+then in cmd line make sure you are still in you prject folder path for example c/xampp/htdocs/example and run the command "npm install"
+
+when you are done, you will have installed all of the tools below
+"devDependencies": {
+        "axios": "^0.17",
+        "bootstrap-sass": "^3.3.7",
+        "cross-env": "^5.1",
+        "jquery": "^3.2",
+        "laravel-mix": "^1.0",
+        "lodash": "^4.17.4",
+        "vue": "^2.5.7"
+    }
