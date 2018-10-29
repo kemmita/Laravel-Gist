@@ -1,0 +1,4 @@
+1. Run command <composer create-project laravel/laravel hacker>
+2. cd into your project "hacker" run command <php artisan serve>
+3. Go to http://127.0.0.1:8000 and you should see your app running
+4. 
