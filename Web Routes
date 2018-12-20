@@ -1,13 +1,7 @@
-//if you only have a '/' in your view, this will act as the index page and the view being returned will be the main view.
-Route::get('/', function () {
-    return view('home');
-});
+**Simple Route**
 //Using the get function will return data what ever blade we want to use we need only to add the name of the blade file where it says 
 return view. You will need a new url for this so /about will mean that example.com/about will return this view
 Route::get('/about', function () {
     return view('about');
 });
 
-Route::get('/contact', function () {
-    return view('contact');
-});
