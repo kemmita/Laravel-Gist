@@ -15,3 +15,9 @@ Route::get('/about', 'PageController@about');
 //Appending a name to the end of your route will allow you to call on the route simply by using the word contact instead of specifing
 //the entire url, this is not meant for users in the browser, but for the code.
 Route::get('/contact', 'PageController@contact')->name('contact');
+
+//Now that we have appended the name contact to our route, we can use it within our anchor tags
+
+<li class="nav-item active">
+     <a class="nav-link" href="{{ route('contact') }}">Contact</a>
+</li>
