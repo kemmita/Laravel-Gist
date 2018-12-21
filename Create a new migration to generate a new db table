@@ -1,0 +1,39 @@
+1. In your command line, run command 
+php artisan make:migration questions_table
+
+2. This will generate a new migration file in your migrations directory. In the migration file, you will want to locate the up function 
+and fill in the neccesary fields.
+
+ public function up()
+    {
+        Schema::create('questions', function (Blueprint $table) {
+            //increments is better than integer as the integer would need to be enetered by the user every time.
+            $table->increments('id');
+            $table->string('title');
+            //specify a field as nullable if it is ok to pass in nothing 
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+    }
+    
+3. Then run php artisan migrate
+
+4. Once the table has been created, you will want to create the model for the table.
+5. Run php artisan make:model Question. It needs to be singular Question so that it knows to communicate with the table questions created
+above.
+
+
+
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Question extends Model
+{
+    //
+}
+
+6. The code above will allow us to add and retrieve data from the db, remember that the fields were declared in the migration
+so it is a bit different than .NET
