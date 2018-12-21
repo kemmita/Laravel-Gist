@@ -5,3 +5,13 @@ Route::get('/about', function () {
     return view('about');
 });
 
+**Controller, non-resource Route**
+//Once a user enters www.example.com/about they will be brought to the page controller and directed to the about action
+Route::get('/about', 'PageController@about');
+
+
+
+**Named Routes**
+//Appending a name to the end of your route will allow you to call on the route simply by using the word contact instead of specifing
+//the entire url, this is not meant for users in the browser, but for the code.
+Route::get('/contact', 'PageController@contact')->name('contact');
