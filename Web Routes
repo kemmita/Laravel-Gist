@@ -10,6 +10,8 @@ Route::get('/about', function () {
 Route::get('/about', 'PageController@about');
 
 
+**Resource Route**
+
 
 **Named Routes**
 //Appending a name to the end of your route will allow you to call on the route simply by using the word contact instead of specifing
