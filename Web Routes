@@ -11,6 +11,10 @@ Route::get('/about', 'PageController@about');
 
 
 **Resource Route**
+//In order to use a resource route, you must first create a resource controller aka CRUD controller. Once you have done that you can 
+//implement the routes busing the resource keyword. Depending on the data sent with http request and the type of request sent, will 
+//determine the action executed.
+Route::resource('questions', 'QuestionController');
 
 
 **Named Routes**
