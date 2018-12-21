@@ -10,3 +10,10 @@ let us include this file in our header using a laravel functiuon called asset.
         {{--<link rel="stylesheet" href="{{asset('css/style.css')}}">--}}
         <link rel="stylesheet" href="{{asset('css/app.css')}}">
  </head>
+
+
+3. And let us not forget to inlcude the nessecary js files. As you can tell, we are using a jQuery cdn, but calling the bootstrap.js from the public/js direcotry
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{{asset('js/app.js')}}"></script>
+</body>
+</html>
