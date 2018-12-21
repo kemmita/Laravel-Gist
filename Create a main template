@@ -1,0 +1,55 @@
+1. This will be our main template and any data yielded will display where the content is yielded
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Laravel</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">Question</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ route('home') }}">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Disabled</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    //we are yielding content, so our view must have a section named content if it wishes to be yielded here, it will also
+    //need to use inhertience to call on the template itself.
+    @yield('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{{asset('js/app.js')}}"></script>
+</body>
+</html>
+
+
+2. Now we will create a normal view and make sure that it extends the template above and that the markup is wrapped up within section tag
+
+@extends('template')
+@section('content')
+<div class="container">
+    <div class="jumbotron">
+        <h1>Ask A Question</h1>
+        <p>Fragen sie Etwas und wir werden ein Antwort fur dich finden!</p>
+        <p><a href="" class="btn btn-primary btn-lg" role="button">Ask Now</a></p>
+    </div>
+    <h2>Recent Questions</h2>
+</div>
+@endsection
