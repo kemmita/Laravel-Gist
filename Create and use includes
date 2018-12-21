@@ -1,73 +1,44 @@
-kind of like extending a layout, when can include a file.
-to crate an include go to views add a new folder called include then add a file in the folder, I called mine sidebar
-we need to create a section but for some reason not end it?
-@section('sidebar')
-    <div class="sidebar">
-        <h3>Sidebar</h3>
-        this is a sidebar
+1. Here in our main template, we will inluce the header file as to keep the code less cluttered.
 
-    </div>
-    
-now we could include this seperatly into one view but we can also add it to every view by including it in the mainlayout
+
 <!doctype html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <title>Laravel</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
 </head>
 <body>
-@yield('content')
-{{--remember when extending or including files in laravel a period is used instead of a slash.--}}
-{{--below translates to in folder include and file name is sidebar.--}}
-{{--Since this is the mainlayout, every view would recieve this--}}
-@include('include.sidebar')
+    @include('includes/header')
+    @yield('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="{{asset('js/app.js')}}"></script>
 </body>
 </html>
 
+2. We will now create a header.blade.php file in the includes direcoty.
 
-
-//I had to create a new include for a navigation bar, went to my include folder added a new file added a @section at the top
-@section('nav')
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">Question</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('home') }}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Disabled</a>
+                </li>
             </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
-
-
-//went back to the mainlayout and added an inlucde
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet">
-</head>
-<body>
-
-{{--it does matter where you put your includes, the way you stack them is the way it will appear in order on the screen.--}}
-@include('include.nav')
-@yield('content')
-@include('include.sidebar')
-<script src="js/script.js"></script>
-</body>
-</html>
+        </div>
+    </nav>
+</header>
