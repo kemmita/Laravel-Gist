@@ -1,0 +1,12 @@
+1. After running npm install, you should aquire bootstrap
+2. TO include the bootstrap, you will notice that in public/css a style sheet was create "app.css" this will contain the bootstrap so
+let us include this file in our header using a laravel functiuon called asset.
+
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Laravel</title>
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
+        {{--<link rel="stylesheet" href="{{asset('css/style.css')}}">--}}
+        <link rel="stylesheet" href="{{asset('css/app.css')}}">
+ </head>
