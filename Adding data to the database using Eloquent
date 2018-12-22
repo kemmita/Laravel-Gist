@@ -1,0 +1,64 @@
+1. We have used a crud controller and are first utilizing the create action to redirect the user to the create view.
+
+ public function create()
+    {
+        return view('questions.create');
+    }
+
+2. Below is the code located in the create view.
+
+@extends('template')
+@section('content')
+    <div class="container mt-5">
+        <h1>Ask a Question</h1>
+        <hr>
+        //below we specify the action as question.store which is a POST action in the controller.
+        <form action="{{ route('question.store') }}" method="POST">
+            {{ csrf_field() }}
+            <label for="title">Question</label>
+            <input type="text" name="title" id="title" class="form-control">
+            <label for="description"></label>
+            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+            <input type="submit" class="btn btn-primary" value="Submit Question">
+        </form>
+    </div>
+@endsection
+
+3. Before moving to the store action within the controller, we will first need to bring in the Question Model to communicate with the DB
+
+<?php
+
+namespace App\Http\Controllers;
+// Bring in the namespace of the model
+use App\Question;
+use Illuminate\Http\Request;
+
+class QuestionController extends Controller
+{
+    // Using dp injection, we create an instance of the Question Model
+    protected $q;
+    public function __construct(Question $question)
+    {
+        $this->q = $question;
+    }
+
+ 4. Now we finish in the store action
+ 
+  public function store(Request $request)
+    {
+        // validate data
+        $this->validate($request, [
+            'title' => 'required|max:255'
+        ]);
+        //process and submit
+        $this->q->title = $request->title;
+        $this->q->description = $request->description;
+
+
+        //redirect
+        if ($this->q->save()){
+            return redirect()->route('question.show', $this->q->id);
+        }else{
+            return redirect()->route('question.create');
+        }
+    }
