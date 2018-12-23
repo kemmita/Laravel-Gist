@@ -1,0 +1,27 @@
+1. Use the index action within the controller to fetch all questions in the db
+
+    public function index()
+    {
+        //using the Question Model object instance "$q" we fetch all questions from the db using the Eloquent all method.
+        $questions = $this->q::all();
+        //Return to the index view and attch the data fetched above 
+        return view('questions.index')->with('questions', $questions);
+    }
+    
+2. In the view, we use the blade "@foreach" function to loop through the objects fetched.
+
+@extends('template')
+@section('content')
+    <div class="container mt-5">
+        <h1 class="mb-3">Recent Questions:</h1>
+        @foreach($questions as $q)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">{{$q->title}}</h3>
+                    <p class="lead card-text">{{$q->description}}</p>
+                    <a href="{{ route('question.show', $q->id) }}" class="btn btn-primary btn-sm">View Details</a>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@endsection
