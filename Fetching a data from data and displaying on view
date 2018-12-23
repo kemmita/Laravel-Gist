@@ -1,0 +1,18 @@
+1. First we will need to get into our controller where we will need an action to fetch the data.
+
+   public function show($id)
+    {
+        //use the eloquent find or fail function to locate the object via the id provided.
+        $question = $this->q::findOrFail($id);
+        //once found specify which view it will be displayed in, for us it will be sent to direcotry questions and to view show
+        //use the with function to send the data that was located.
+        return view('questions.show')->with('question', $question);
+    }
+
+2. Once in the correct view, use the variable passed from the controller to fetch the data.
+
+    @extends('template')
+    @section('content')
+    //Here we will display the title field of the question, we could display and field we specify using the variable passed from the controller
+    <h1>{{ $question->title }}</h1>
+   @endsection
