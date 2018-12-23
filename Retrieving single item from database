@@ -1,0 +1,31 @@
+1. Using the store method, we create a new object
+
+ public function store(Request $request)
+    {
+        // validate data
+        $this->validate($request, [
+            'title' => 'required|max:255'
+        ]);
+        //process and submit
+        $this->q->title = $request->title;
+        $this->q->description = $request->description;
+
+
+        //redirect
+        if ($this->q->save()){
+           // Here we send the data that was just stored in the db to the route questions.show which in turn executes an action called
+           // show within the same controller. Notice how we send a second param, the id of the newly created object
+            return redirect()->route('question.show', $this->q->id);
+        }else{
+            return redirect()->route('question.create');
+        }
+    }
+
+2. Use show action to fetch object
+
+   public function show($id)
+    {
+        //using Eloguents findOrFail method, we will use the id passed in to find the object requested.
+        $question = $this->q::findOrFail($id);
+        return $question->title;
+    }
