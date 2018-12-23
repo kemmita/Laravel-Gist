@@ -1,0 +1,44 @@
+1. for the most part, forms in Laravel do not differ that much from the original core php forms.
+
+@extends('template')
+@section('content')
+    <div class="container mt-5">
+        <h1>Ask a Question</h1>
+        <hr>
+        // for the action we must use the Laravel route method to declare the correct route which will in turn execute the correct action.
+        <form action="{{ route('question.store') }}" method="POST">
+            //Always include a csrf_field before the input fields
+            {{ csrf_field() }}
+            <label for="title">Question</label>
+            <input type="text" name="title" id="title" class="form-control">
+            <label for="description"></label>
+            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
+            <input type="submit" class="btn btn-primary" value="Submit Question">
+        </form>
+    </div>
+@endsection
+
+2. Route
+
+Route::resource('question', 'QuestionController');
+
+3. Controller Action
+
+    public function store(Request $request)
+    {
+        // validate data
+        $this->validate($request, [
+            'title' => 'required|max:255'
+        ]);
+        //process and submit
+        $this->q->title = $request->title;
+        $this->q->description = $request->description;
+
+
+        //redirect
+        if ($this->q->save()){
+            return redirect()->route('question.show', $this->q->id);
+        }else{
+            return redirect()->route('question.create');
+        }
+    }
