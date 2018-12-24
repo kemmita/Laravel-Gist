@@ -1,4 +1,4 @@
-//in order to keep someone from using a link to get to a page that requires a password, we must use this middleware. Place this within
+1. in order to keep someone from using a link to get to a page that requires a password, we must use this middleware. Place this within
 every controller you wish to apply authentication to.
 <?php
 
@@ -16,3 +16,11 @@ class BookmarksController extends Controller
         return view('home');
     }
 }
+
+
+2. To add an exception to one or more of the actions in the controller, we can pass a second array argument.
+
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index']]);
+    }
