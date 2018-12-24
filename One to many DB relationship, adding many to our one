@@ -1,0 +1,79 @@
+1. We go to our Question show view so that we can submit an answer to the question
+
+@extends('template')
+@section('content')
+    <div class="container">
+        <h1 class="text-center">{{ $question->title }}</h1>
+        <p class="lead text-center">{{ $question->description }}</p>
+        <hr>
+
+        //Here we send a answer to the question using a typical route and post method, but this time we are using the 
+        $question object passed in to grab the id. This is so that when we submit an answer, it knows which question to apply the
+        answer to.
+        <form action="{{ route('answers.store') }}" method="post">
+            {{ csrf_field() }}
+            <h4>Can You Answer This?</h4>
+            <textarea name="answer_content" rows="4" class="form-control"></textarea>
+            //use an input field of type hidden to pass the question id
+            <input type="hidden" value="{{ $question->id }}" name="question_id"/>
+            <button>submit</button>
+        </form>
+    </div>
+@endsection
+
+2. Now in our answers controller we use our store action
+
+ public function store(Request $request)
+    {
+            $this->validate($request, [
+                'answer_content' => 'required',
+                'question_id' => 'required'
+            ]);
+            $answer = new Answer();
+            $answer->content = $request->answer_content;
+            
+            using the question id we passed in above, we grab the question and call on the answers method that was defined in the 
+            Question model.
+            $question = Question::findOrFail($request->question_id);
+            here we save the answer to the answers method of type Question Model
+            $question->answers()->save($answer);
+            return redirect()->route('question.show', $question->id);
+    }
+
+3. If we want to display all of the answers to the question, we must first go to the QuestionController and find the action
+that is used by route question.show
+
+    //we obtain the id from the store action in the Answerscontroller above.
+    public function show($id)
+    {
+        $question = $this->q::findOrFail($id);
+        return view('questions.show')->with('question', $question);
+    }
+
+4. Notice how we did not need to alter the action code as the answers shares a relationship with questions and tharfore the data needed
+is included automaticaly. So back in the show view, we can reference $question object directly so call on the answers methodn in question model
+
+@extends('template')
+@section('content')
+    <div class="container">
+        <h1 class="text-center">{{ $question->title }}</h1>
+        <p class="lead text-center">{{ $question->description }}</p>
+        <hr>
+
+        //Here we display the many answers to our one question.
+        @foreach($question->answers as $answer)
+            <p>{{$answer->content}}</p>
+        @endforeach
+
+        <hr>
+
+
+        <form action="{{ route('answers.store') }}" method="post">
+            {{ csrf_field() }}
+            <h4>Can You Answer This?</h4>
+            <textarea name="answer_content" rows="4" class="form-control"></textarea>
+            <input type="hidden" value="{{ $question->id }}" name="question_id"/>
+            <button>submit</button>
+        </form>
+    </div>
+@endsection
