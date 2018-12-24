@@ -1,4 +1,5 @@
-//in order to keep someone from using a link to get to a page that requires a password, we must create this constructor function below.
+//in order to keep someone from using a link to get to a page that requires a password, we must use this middleware. Place this within
+every controller you wish to apply authentication to.
 <?php
 
 namespace App\Http\Controllers;
