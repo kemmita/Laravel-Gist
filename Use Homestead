@@ -1,0 +1,4 @@
+1. Create a new directory.
+2. cd into directory
+3. run command <vagrant init laravel/homestead>
+4. If you need to create a new ip, checkout devops repo.
