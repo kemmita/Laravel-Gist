@@ -1,0 +1,47 @@
+1. A user will click on a question they wish to edit. As soon as they click edit, an action will run
+
+    public function edit($id)
+    {
+        //we need to first fish out the question from the db and and direct the user to a new view along with the data of the question
+        they wish to edit.
+        $this->q = Question::findOrFail($id);
+        return view('questions.edit')->with('question', $this->q);
+    }
+
+2. Make sure to include the id of the question within the action. we will also need to use a method_field of PATCH as the only choice we
+have for the method of the form is get or post.
+
+@extends('template')
+@section('content')
+    <div class="container mt-5">
+        <h1>Edit Question</h1>
+        <hr>
+        <form  action="{{ route('question.update', $question->id)}}" method="POST">
+            {{ csrf_field() }}
+            {{ method_field('PATCH') }}
+            <label for="title">Question</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="{{$question->title}}">
+            <label for="description"></label>
+            <textarea name="description" id="description" cols="30" rows="10" class="form-control" placeholder="{{$question->description}}"></textarea>
+            <input type="submit" class="btn btn-primary" value="Submit Edits">    <a href="{{ route('home') }}" class="btn btn-warning float-right">Back</a>
+        </form>
+    </div>
+@endsection
+
+3. As the action stated in the form above, we will be brought to an update action
+
+    public function update(Request $request, $id)
+    {
+        $this->q = Question::findOrFail($id);
+        $this->q->title = $request->title;
+        $this->q->description = $request->description;
+        $this->q->user()->associate(Auth::id());
+
+
+        //redirect
+        if ($this->q->save()){
+            return redirect()->route('question.show', $this->q->id);
+        }else{
+            return redirect()->route('question.create');
+        }
+    }
