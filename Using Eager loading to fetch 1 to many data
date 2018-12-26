@@ -1,0 +1,202 @@
+1. We have a user and that user will act as our one. We have questions and a answers table, this will act as our many tables.
+
+2. User Model
+
+    public function questions(){
+        return $this->hasMany('App\Question');
+    }
+    public function answers(){
+        return $this->hasMany('App\Answer');
+    }
+    
+3. Question Model
+
+    public function answers(){
+        return $this->hasMany('App\Answer');
+    }
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+    
+4. Answer Model
+
+ public function question(){
+        return $this->belongsTo('App\Question');
+    }
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+ 
+ 5. users migration
+ 
+     public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+    
+6. questions migration
+
+class CreateQuestionsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('questions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+    }
+    public function down()
+    {
+        Schema::dropIfExists('questions');
+    }
+}
+
+7. answers migration
+
+public function up()
+    {
+        Schema::create('answers', function (Blueprint $table) {
+            $table->increments('id');
+            //Foreign key must match the model spelling, hence "question" as the Model is name Question but appears in the db as questions
+            $table->integer('question_id')->unsigned();
+            $table->text('content');
+            $table->timestamps();
+
+            //foreign key deceleration uses questions and not question as used above
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
+        });
+    }
+    public function down()
+    {
+        Schema::table('answers', function (Blueprint $table){
+           $table->dropForeign('answers_question_id_foreign');
+        });
+        Schema::dropIfExists('answers');
+    }
+
+8. Now we need to alter the questions and answers table with two migrations. Refrence this repo on how to alter an exisitng db table
+
+9. add user id to questions migration
+
+    public function up()
+    {
+        Schema::table('questions', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('questions', function (Blueprint $table) {
+            $table->dropForeign('questions_user_id_foreign');
+            $table->dropColumn('user_id');
+        });
+    }
+ 
+ 10. Add user id to answers table migration
+ 
+     public function up()
+    {
+        Schema::table('answers', function (Blueprint $table) {
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('answers', function (Blueprint $table) {
+            $table->dropForeign('answers_user_id_foreign');
+            $table->dropColumn('user_id');
+        });
+    }
+    
+    
+ 11. Now in our controller we can use eager loading to fetch the neccesary data.
+ 
+    public function profile($id){
+    //below we fetch the user along with all of the questions and answers assoicated with that user. In additon to that\
+    we use the dot notation to fetch the 1tomany association of answers to questions.
+        $user = User::with(['questions', 'answers', 'answers.question'])->findOrFail($id);
+        return view('profile')->with('user', $user);
+    }
+ 
+ 12. To use the data in the blade, please reference the code below.
+ 
+ @extends('template')
+@section('content')
+    <div class="container">
+        <h1>{{$user->name}}'s Profile</h1>
+        <p>
+            See what {{$user->name}} has been up to on LaravelAnswers.
+        </p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Questions</h3>
+                //Here we are taking advantage of the eager loading and fetching all the questions associated with the user fetched from
+                the db
+                @foreach($user->questions as $question)
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{$question->title}}</h4>
+                            <p class="card-text">{{$question->description}}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{route('question.show', $question->id)}}" class="btn btn-sm btn-info">More</a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="col-md-6 ">
+                <h3>Answers</h3>
+                @foreach($user->answers as $answer)
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{$answer->question->title}}</h4>
+                            <p class="card-text">{{$answer->content}}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{route('question.show', $answer->question->id)}}" class="btn btn-sm btn-info">More</a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+@endsection
+ 
+ 
+
+
+
