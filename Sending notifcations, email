@@ -1,0 +1,8 @@
+Alter nessecary info in .env
+
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=fcf8b7f60b0ca0
+MAIL_PASSWORD=53f05ecccfa9e2
+MAIL_ENCRYPTION=null
