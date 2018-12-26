@@ -1,0 +1,11 @@
+1. In our template/main layout we need to inlcude our app.js and our app.css file, these files our located in our public direcotory.
+2. Using Laravel mix/webpack, we compile from our resources direcotry/sass and resources direcotry/js to the public files mentioned 
+above. If we look at webpack.mix.js w3e can see this defined 
+
+mix.js('resources/js/app.js', 'public/js')
+   .sass('resources/sass/app.scss', 'public/css');
+   
+   
+3. Now we if we alter our sass code, we will need to run <npm run dev> or <npm run watch> after tyhis you can refresh your page and 
+you should see the changes reflkect the code.
+
