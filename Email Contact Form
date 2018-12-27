@@ -39,5 +39,78 @@ Route::post('/contact', 'PageController@sendContact')->name('contact');
 </div>
 @endsection
 
-4. sendContact action
+4. create a mailable, run command <php artisan make:mail ContactForm --markdown=email.contact> this command will create a email 
+direcotry in views and will place a blade view named contact in this direcotry.
+
+5. If you go to app/Mail, you will see our ContactForm controller that was generated.
+
+6. Head back over to the PageController and create the sendContact action
+
+  public function sendContact(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required|min:3',
+            'message' => 'required|min:10'
+        ]);
+        //after validation we use the Laravel Mail facade and the newly created ContactForm class.
+        Mail::to('admin@example.com')->send(new ContactForm($request));
+        return view('welcome');
+    }
+
+7. The send method above will trigger the  build method in the ContactForm class.
+
+<?php
+namespace App\Mail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+class ContactForm extends Mailable
+{
+    use Queueable, SerializesModels;
+    public $email;
+    public $name;
+    public $subject;
+    public $message;
+    public function __construct($request)
+    {
+        $this->email = $request->email;
+        $this->name = $request->name;
+        $this->subject = $request->subject;
+        $this->message = $request->message;
+    }
+    public function build()
+    {
+        //to use normal html and css, use $this->view() and point to a view that will act as your email template.
+        return $this->from($this->email, $this->name)
+                    ->subject($this->subject)
+                    ->markdown('email.contact');
+    }
+}
+
+8. Now we go into our blade and remeber we defined the code as makrdown in the above file, if we wanted to use normal html and css, 
+we would have specified view.
+
+@component('mail::message')
+# New Contact Message
+
+Someone submitted a contact form.
+
+@component('mail::panel')
+    //This is how we display dynamic data.
+    {{$message}}
+@endcomponent
+
+@component('mail::button', ['url' => ''])
+Button Text
+@endcomponent
+
+Thanks,<br>
+{{ config('app.name') }}
+@endcomponent
+
+
 
