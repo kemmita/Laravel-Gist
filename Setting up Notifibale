@@ -1,0 +1,90 @@
+1. We want to create a notfication for when someone has answered a question a user has posted.
+
+2. Run command php artisan make:notification NewAnswerSubmitted
+
+3. Next verify that your user model is using notfiable
+
+<?php
+
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+    
+4. The action triigered upon an answe submission is answers.store tharfore it is in this action we must instantaite a new insatnce
+of NewAnswerSubmitted. 
+
+verify that the notficiation created above is being used within the controller.
+use App\Notifications\NewAnswerSubmitted;
+
+  public function store(Request $request)
+    {
+            $this->validate($request, [
+                'answer_content' => 'required',
+                'question_id' => 'required'
+            ]);
+            $answer = new Answer();
+            $answer->content = $request->answer_content;
+            $answer->user()->associate(Auth::id());
+
+            $question = Question::findOrFail($request->question_id);
+            $question->answers()->save($answer);
+            //Using our 1tomany relationship we can identify the user from the question object. We then use the notify method to\
+            instantriate the NewAnswerSubmitted class. We also pass in some arguments so that we can use that data within the 
+            message
+            $question->user->notify(new NewAnswerSubmitted($answer, $question, Auth::user()->name));
+            return redirect()->route('question.show', $question->id);
+    }
+    
+5. Now in the NewAnswerSubmitted notfication class we will send the notfication
+
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+
+class NewAnswerSubmitted extends Notification
+{
+    use Queueable;
+
+    //using the constructor, we pass in the arguments from the store action within the Answers controller.
+    public $name;
+    public $answer;
+    public $question;
+    public function __construct($answer, $question, $name)
+    {
+        $this->answer = $answer;
+        $this->name = $name;
+        $this->question = $question;
+    }
+
+    //notfication is being sent via email
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
+    //Here we defin the notfication message and the action button, notice how we are using the args brought in via the constructor.
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->line('A new answer was submitted to your question: '. $this->question->title.'.')
+                    ->action('View all answers', route('question.show', $this->question->id))
+                    ->line('Thank you for using Rusty Knows Everything!');
+    }
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
+    }
+}
