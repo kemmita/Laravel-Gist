@@ -1,0 +1,46 @@
+1. run command composer require nexmo/client
+
+2. Add nexmo array to config/services.php
+
+    'nexmo' => [
+        'key' => env('NEXMO_KEY'),
+        'secret' => env('NEXMO_SECRET'),
+//        Grab from Nexmo dashboard.
+        'sms_from' => '18023574278'
+    ],
+
+3. Go to env file and add the nexmo key and secret to the file, the key and secret will be opbtained from your nexmo dashboard.
+
+NEXMO_KEY=e7fd8e7b
+NEXMO_SECRET=I7H5yrPlz0Ct34TZ
+
+4. Now head over to our NewAnsweSubmitted class that was created when we created Notifiable. There is a file in this repo to set that up.
+
+//Add nexmo to the via array
+    public function via($notifiable)
+    {
+        return ['mail', 'nexmo'];
+    }
+ 
+ 
+//Create a toNexmo method
+
+   public function toNexmo($notifiable)
+    {
+        return (new NexmoMessage)
+            ->content('Your question'. $this->question->title. 'was just answered by'. $this->name.'. Check it out at Rusty Knows Everything!');
+    }
+
+//Verify that this class is including this
+use Illuminate\Notifications\Messages\NexmoMessage;
+
+5. Lastly in the User Model defin the route for nexmo which in this case will be the phone number associated with the user.
+
+class User extends Authenticatable
+{
+    use Notifiable;
+    public function routeNotificationForNexmo()
+    {
+        return $this->phone;
+    }
+    
