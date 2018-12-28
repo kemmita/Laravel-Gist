@@ -1,3 +1,5 @@
+**MAKE THE NEW COLUMN NULLABLE SO THAT IT WILL NOT AFFECT THE DB**
+
 run
 php artisan make:migration add_admin_column_to_posts_table --table="posts"
 
