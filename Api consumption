@@ -1,0 +1,31 @@
+1. First we will need to install guzzle run command <composer require guzzlehttp/guzzle:~6.0>
+
+2. Create a route
+
+Route::get('/github/{username}', 'ApiController@github')->name('github');
+
+
+3. Create an Api controller <php artisan make:controller ApiController>
+
+We will create a function that pulls data on a specific github user by their github name
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+// we need to use guzzle to fetch the api
+use GuzzleHttp\Client as GuzzleClient;
+class ApiController extends Controller
+{
+    public function github($username){
+        $client = new GuzzleClient();
+        //here we send the api get request to the dynamic uri
+        $response = $client->get('https://api.github.com/users/'.$username);
+        //use json_decode to convert into a php object
+        $api_data = json_decode($response->getBody());
+        //since the data has been converted to a php object we can pass it into a view per normal as we would do with an object from
+        the db!
+        return view('api')->with('data',$api_data);
+    }
+}
