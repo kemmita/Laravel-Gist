@@ -1,0 +1,95 @@
+1. Create a controller php artisan make:controller UploadController
+2. Create two routes
+
+Route::get('/upload', 'UploadController@getUpload')->name('upload');
+Route::post('/upload', 'UploadController@postUpload');
+
+3. In our upload controller we will create two methods one to direct to a new view and another to process the upload.
+
+class UploadController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function getUpload(){
+        return view('upload');
+    }
+    public function postUpload(){
+        echo "File Uploaded";
+    }
+}
+
+4. Here we are in the upload view
+
+@extends('template')
+@section('content')
+    <div class="container mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 m-auto">
+                <h1>Upload Profile Image</h1>
+                // check the enctype
+                <form action="{{ route('upload') }}" method="POST" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                     <input type="file" name="picture" id="picture" class="d-block mb-2">
+                     <input type="submit" class="btn btn-success btn-sm" value="Upload">    <a href="{{ route('home') }}" class="btn btn-sm btn-warning">Back</a>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+5. run command <php artisan storage:link> so that we can give the user the image
+6. Back in the upload controller, we complete the postUpload action
+
+  public function postUpload(Request $request){
+       $file = $request->file('picture');
+       Storage::disk('public')->put($file->getClientOriginalName(), File::get($file));
+       return redirect('/');
+    }
+    
+ 7. The file is now uploaded and we now need to connect it to a user via the db. Create a new migration to alter the users table
+ 
+<?php
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+class AddUserProfilePicToUsers extends Migration
+{
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+                //we uploaded a default image of user.png to the storage public direcotry. We are using a string to reference the 
+                image in the db, but the image is never placed in the db, only an associated string of the image.
+                $table->string('profile_pic')->default('user.png');
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('profile_pic');
+        });
+    }
+}
+
+8. Back in the upload controller, we complete the postUpload action
+
+   public function postUpload(Request $request){
+   //we fetch the current user u0ploading the image by utilizing Auth
+        $user = Auth::user();
+   //reguste file field from form
+        $file = $request->file('picture');
+  //Create uniqe file names and attach the original file extension.
+        $filename = uniqid($user->id."_").".".$file->getClientOriginalExtension();
+  //Store the file in public storage      
+        Storage::disk('public')->put($filename, File::get($file));
+  //Here we save the filename generated above to the db.
+        $user->profile_pic = $filename;
+        $user->save();
+        return redirect(route('profile', $user->id));
+    }
+
+
