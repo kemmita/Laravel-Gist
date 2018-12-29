@@ -129,6 +129,8 @@ TWITTER_ID=****************
 TWITTER_SECRET=*************************************
 TWITTER_REDIRECT=http://127.0.0.1:8000/login/twitter/callback
 
+8.1 Kill server and restart
+
 9. Setup your routes
 
 Route::get('/login/{provider}', 'Auth\SocialAccountController@redirectToProvider');
