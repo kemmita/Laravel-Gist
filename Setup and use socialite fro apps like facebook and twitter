@@ -1,0 +1,138 @@
+1. Run command <composer require laravel/socialite>
+2. Go into your users migration and alter email and password to be nullable
+
+ public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+    
+3. If you have an exisitng database, run command <php artisan migrate:refresh>  **YOU will lose all of your exisitng data**
+
+4. Create Model and migration run command <php artisan make:model SocialAccount --migration>
+<?php
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+class CreateSocialAccountsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('social_accounts', function (Blueprint $table) {
+            $table->increments('id');
+//            Define 1tomany relationship
+            $table->bigInteger('user_id');
+            $table->string('provider_name')->nullable();
+            $table->string('provider_id')->unique()->nullable();
+            $table->timestamps();
+        });
+    }
+    public function down()
+    {
+        Schema::dropIfExists('social_accounts');
+    }
+}
+
+5. finish defining relationship between user and social account models
+
+//User.php
+
+   public function accounts(){
+        return $this->hasMany('App\SocialAccount');
+    }
+    
+//SocialAccount.php
+
+ class SocialAccount extends Model
+{
+    protected $fillable = [
+        'provider_name', 'provider_id'
+    ];
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+}
+
+6. Create SocialAccount controller <php artisan make:controller Auth\SocialAccountController>
+
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\SocialAccount;
+use App\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+
+
+class SocialAccountController extends Controller
+{
+    public function redirectToProvider($provider){
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function handleProviderCallback($provider){
+        try{
+            $user = Socialite::driver($provider)->user();
+        } catch (Exception $e){
+            return redirect('/login');
+        }
+        $authUser = $this->findOrCreateUser($user, $provider);
+
+        Auth::login($authUser, true);
+        return redirect('/');
+    }
+
+    public function findOrCreateUser($socialUser, $provider){
+        $account = SocialAccount::where('provider_name', $provider)->where('provider_id', $socialUser->getId())->first();
+        if ($account){
+            return $account->user;
+        }else{
+            $user = User::where('email', $socialUser->getEmail())->first();
+
+            if (!$user){
+                $user = User::create([
+                   'email' => $socialUser->getEmail(),
+                    'name' => $socialUser->getName(),
+                ]);
+            }
+            $user->accounts()->create([
+               'provider_name' => $provider,
+               'provider_id' => $socialUser->getId(),
+            ]);
+            return $user;
+        }
+    }
+
+}
+
+7. Next go into config/services and configure twitter 
+
+ 'twitter' => [
+        'client_id' => env('TWITTER_ID'),
+        'client_secret' => env('TWITTER_SECRET'),
+        'redirect' => env('TWITTER_REDIRECT'),
+    ],
+    
+8. After creating an app at https://developer.twitter.com go into your .env file and fill in the data
+
+TWITTER_ID=****************
+TWITTER_SECRET=*************************************
+TWITTER_REDIRECT=http://127.0.0.1:8000/login/twitter/callback
+
+9. Setup your routes
+
+Route::get('/login/{provider}', 'Auth\SocialAccountController@redirectToProvider');
+Route::get('/login/{provider}/callback', 'Auth\SocialAccountController@handleProviderCallback');
+
+10. Add this line of code to your register and or login page
+              <a href="{{url('login/twitter')}}" class="btn btn-success">twitter login/register</a>
