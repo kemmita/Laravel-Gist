@@ -6,4 +6,138 @@ ALGOLIA_APP_ID=5*********
 ALGOLIA_SECRET=f**************************
 
 4. run command composer require algolia/algoliasearch-client-php
-5.
+5. Laravel Scout will only work on models that use Searchable
+
+class Post extends Model
+{
+  use Searchable;
+
+  protected $fillable = [
+      'title', 'content', 'published'
+  ];
+
+  public function user()
+  {
+    return $this->belongsTo('App\User');
+  }
+}
+
+6. Then run command <composer require algolia/algoliasearch-client-php:^1.27>
+7. Then run command <php artisan scout:import "App\Post">
+8. Then run command <php artisan scout:import "App\User"> we now are ready to start indexing for these two models.
+9. If you go into trhe algolia dashboard, you should see users and posts under Top indices 
+10. Create our route
+Route::get('posts/search', 'PostController@search')->name('posts.search');
+
+11. Create function in posts controller
+
+   public function search(Request $request)
+    {
+      //check if user is interacting with input field.
+      if ($request->has('q')) {
+            //display data like input while user is typing
+            $request->flashOnly('q');
+            //run search
+            $results = Post::search($request->q)->get();
+      } else {
+            $results = [];
+      }
+      return view('posts.search')->with('results', $results);
+    }
+    
+12. Create view for search and result display
+
+@extends('layouts.app')
+
+@section('content')
+  <div class="container">
+    {{--search for data--}}
+    <h1>Search Posts</h1>
+    <form action="{{route('posts.search')}}" method="get">
+      {{ csrf_field() }}
+      <div class="input-group">
+        <input type="text" name="q" id="q" class="form-control input-lg" placeholder="Search for a post..." value="{{old('q')}}">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-default btn-lg">Search</button>
+        </span>
+      </div>
+    </form>
+
+    {{--Fetch searched data--}}
+    <hr>
+    @foreach($results as $r)
+      <div class="row">
+        <div class="col-md-8">
+          <h3>{{$r->title}}</h3>
+        </div>
+        <div class="col-md-4">
+          @if(str_word_count($r->content) > 10)
+            <h4>Too much content to display here.</h4>
+          @else
+            {{$r->content}}
+            @endif
+        </div>
+      </div>
+    @endforeach
+  </div>
+@endsection
+
+
+13. *****END of Server side results*****
+
+14. Begin Client side results, this is not needed for non SPA APPS**
+
+15 Run command npm install --save vue-instantsearch
+16. Next go into resources/assets/js/app.js and make sure that your file resembles mine.
+
+require('./bootstrap');
+window.Vue = require('vue');
+import InstantSearch from 'vue-instantsearch';
+Vue.use(InstantSearch);
+Vue.component('example-component', require('./components/ExampleComponent.vue'));
+const app = new Vue({
+    el: '#app'
+});
+
+17. Next run command npm run watch
+
+18. Create route
+
+Route::get('posts/searchjs', 'PostController@searchjs')->name('posts.searchjs');
+
+19. Go into the controller and create the action
+
+    public function searchjs(){
+        return view('posts.searchjs');
+    }
+
+20. Go into your .env file and create an ALGOLIA_SEARCH param
+
+ALGOLIA_SEARCH=b*************************
+
+21. Below live results will be fetched while typing
+
+@extends('layouts.app')
+@section('content')
+  <div class="container">
+    <ais-index index-name="posts" app-id="{{config('scout.algolia.id')}}" api-key="{{env('ALGOLIA_SEARCH')}}">
+    <h1>Search Posts</h1>
+      <ais-input placeholder="Search for Posts..." class="form-control input-lg"></ais-input>
+    <hr>
+
+      <ais-results>
+        <template scope="{result}">
+          <div class="row">
+            <div class="col-md-8">
+              <a :href="('/posts/'+result.id)"><h3>@{{result.title}}</h3></a>
+            </div>
+            <div class="col-md-4">
+              <h6>@{{result.content}}</h6>
+            </div>
+          </div>
+        </template>
+      </ais-results>
+      </ais-index>
+  </div>
+@endsection
+
