@@ -1,0 +1,9 @@
+1. run command composer require laravel/scout
+2. run command php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"\
+3. Go over to your .env file and provide the algolia app id and secret key
+
+ALGOLIA_APP_ID=5*********
+ALGOLIA_SECRET=f**************************
+
+4. run command composer require algolia/algoliasearch-client-php
+5.
