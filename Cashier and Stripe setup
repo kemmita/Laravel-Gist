@@ -79,7 +79,8 @@ STRIPE_SECRET=sk_test_**************
 6. If you go over to https://stripe.com/docs/checkout you can utilize the button code generated for you.
       
       //The code below is specific to our project created at stripe. The action is the next thing we will create below.
-      <form action="your-server-side-code" method="POST">
+  <form action="pay/monthly" method="POST">
+                            {{csrf_field()}}
                             <script
                                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                                     data-key="{{env('STRIPE_KEY')}}"
@@ -89,7 +90,10 @@ STRIPE_SECRET=sk_test_**************
                                     data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                                     data-locale="auto"
                                     data-label="Monthly">
-      </script>
-      </form>
+                            </script>
+                        </form>
       
- 7.
+ 7. Next lets create a route
+ Route::post('pay/{plan}', 'PaymentsController@pay')->name('pay');
+
+8. 
