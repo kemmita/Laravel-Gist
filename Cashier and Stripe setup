@@ -1,0 +1,95 @@
+1. run command composer require "laravel/cashier":"~7.0"
+2. We need to create two migrations one for subs and another to alter the exisitng users table.
+
+//migration to update users
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class UpdateUsersForSubsrciption extends Migration
+{
+    public function up()
+    {
+        Schema::table('users', function(Blueprint $table){
+           $table->string('stripe_id')->nullable();
+           $table->string('card_brand')->nullable();
+           $table->string('card_last_four')->nullable();
+           $table->timestamp('trial_ends_at')->nullable();
+        });
+    }
+    public function down()
+    {
+        Schema::table('users', function(Blueprint $table){
+            $table->dropColumns(['stripe_id', 'card_brand', 'card_last_four', 'trial_ends_at']);
+        });
+    }
+}
+
+//migration to add subscriptions
+
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateSubscriptions extends Migration
+{
+
+    public function up()
+    {
+        Schema::create('subscriptions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id');
+            $table->string('name');
+            $table->string('stripe_id');
+            $table->string('stripe_plan');
+            $table->integer('quantity');
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('ends_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('subscriptions');
+    }
+}
+
+3. Add Billable to the user model.
+
+namespace App;
+
+use Laravel\Cashier\Billable;
+
+
+class User extends Authenticatable
+{
+    use Billable;
+    
+4. Go into strip and grab our key and secret key for our .env file.
+STRIPE_KEY=pk_test_*********************
+STRIPE_SECRET=sk_test_**************
+
+5. In stripe you will need to create subscriptions/producst for the api in our code to reference.
+
+6. If you go over to https://stripe.com/docs/checkout you can utilize the button code generated for you.
+      
+      //The code below is specific to our project created at stripe. The action is the next thing we will create below.
+      <form action="your-server-side-code" method="POST">
+                            <script
+                                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="{{env('STRIPE_KEY')}}"
+                                    data-amount="1000"
+                                    data-name="Kemmit Cash"
+                                    data-description="Monthly Subscription"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                    data-locale="auto"
+                                    data-label="Monthly">
+      </script>
+      </form>
+      
+ 7.
