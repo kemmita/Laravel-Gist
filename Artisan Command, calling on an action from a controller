@@ -1,0 +1,29 @@
+1. Simple use the contoller path and call on it within the handle function
+
+<?php
+
+namespace App\Console\Commands;
+
+use App\Http\Controllers\PostController;
+use App\User;
+use Illuminate\Console\Command;
+use Intervention\Image\Facades\Image;
+
+class MakeImage extends Command
+{
+    protected $signature = 'make:image';
+
+    protected $description = 'It will create a blank image "PNG"';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function handle()
+    {
+        $post = new PostController();
+        $post->displayMessage();
+        return $this->info('Success!');
+    }
+}
