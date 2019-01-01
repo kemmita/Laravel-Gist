@@ -1,0 +1,34 @@
+1. Run command <php artisan make:command MakeImage> 
+
+2. We want to create an image on the run of our command, so we will need to run <composer require intervention/image> to get that lib
+
+3. Now go into out Commands directory and you will see the new MakeImage.php file.
+
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Intervention\Image\Facades\Image;
+
+class MakeImage extends Command
+{
+
+    //this will ammount to <php artisan make:image> in the commnad line.
+    protected $signature = 'make:image';
+
+    protected $description = 'It will create a blank image "PNG"';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    //The handle function is where all the fun stuff happens!
+    public function handle()
+    {
+        $img = Image::canvas(800, 600, "#ccc");
+        $img->save('storage/app/public/greybox.png');
+        echo "Image Generated Successful!";
+    }
+}
