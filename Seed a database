@@ -1,0 +1,103 @@
+1. Run command <php artisan make:seeder GroupTableSeeder>
+
+2. Go into the seeder direcotry and you will see the new class that was created for you.
+
+3. Use QueryBuilder in GroupTableSeeder
+
+<?php
+
+use Illuminate\Database\Seeder;
+
+class ContactTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('contacts')->truncate();
+
+        $groups = [
+            ['id' => 1, 'name' => 'Family', 'created_at' => new DateTime, 'updated_at' => new DateTime],
+            ['id' => 2, 'name' => 'Friends', 'created_at' => new DateTime, 'updated_at' => new DateTime],
+            ['id' => 3, 'name' => 'Clients', 'created_at' => new DateTime, 'updated_at' => new DateTime],
+        ];
+
+        DB::table('groups')->insert($groups);
+    }
+}
+
+
+4. Now we will seed the contacts table using faker
+
+<?php
+
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+class ContactTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('contacts')->truncate();
+
+        $faker = Faker::create();
+        $contacts = [];
+
+        foreach (range(1, 20) as $index){
+            $contacts[] = [
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'phone'=> $faker->phoneNumber,
+                'address' => "{$faker->streetName} {$faker->postcode} {$faker->city}",
+                'company' => $faker->company,
+                'created_at' => new DateTime,
+                'updated_at' => new DateTime
+            ];
+        }
+        DB::table('contacts')->insert($contacts);
+    }
+}
+
+
+5. In DatabaseSeeder.php create the calls for the seeds created above
+
+<?php
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->call('GroupTableSeeder');
+        $this->call('ContactTableSeeder');
+    }
+}
+
+6. run command <php artisan db:seed> if you get an error for a forign key, you can set the foreign key check to 0
+ public function run()
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::table('groups')->truncate();
+
+        $groups = [
+          ['id' => 1, 'name' => 'Family', 'created_at' => new DateTime, 'updated_at' => new DateTime],
+          ['id' => 2, 'name' => 'Friends', 'created_at' => new DateTime, 'updated_at' => new DateTime],
+          ['id' => 3, 'name' => 'Clients', 'created_at' => new DateTime, 'updated_at' => new DateTime],
+        ];
+
+        DB::table('groups')->insert($groups);
+    }
+
