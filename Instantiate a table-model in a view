@@ -1,0 +1,6 @@
+1. If we wanted to fetch all users from the db, we would typically do this in a controller, but in Laravel, you can also do this in a 
+view.
+
+   @foreach(App\Group::all() as $group)
+                <a href="{{route('contacts.index', ['group_id' => $group->id])}}" class="list-group-item">{{$group->name}}<span class="badge">{{$group->contacts()->count()}}</span></a>
+   @endforeach
