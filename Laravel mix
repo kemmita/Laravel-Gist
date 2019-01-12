@@ -9,3 +9,9 @@ mix.js('resources/js/app.js', 'public/js')
 3. Now we if we alter our sass code, we will need to run <npm run dev> or <npm run watch> after tyhis you can refresh your page and 
 you should see the changes reflkect the code.
 
+
+4.Sometimes you will need to replace asset with mix in the main layout header
+<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+
