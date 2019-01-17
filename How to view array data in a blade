@@ -1,0 +1,5 @@
+1. You will have a rows sent from your controller and if you want to see what is in that arrray, simply use printr with some 
+pre tags.
+ <pre>
+    <?php print_r($rows); ?>
+ </pre>
