@@ -1,0 +1,26 @@
+1. to create a factory, we will first need to have some models defined in our DB to use, to create a factory, run command 
+php artisan make:factory QuestionFactory. 
+
+2. In our factory we will need to define our fields that we wish to fill 
+
+<?php
+
+use Faker\Generator as Faker;
+
+$factory->define(App\Question::class, function (Faker $faker) {
+    return [
+        'title' => rtrim($faker->sentence(rand(5, 10)), '.'),
+        'body' => $faker->paragraphs(rand(3, 7), true),
+        'views' => rand(0,10),
+        'answers' => rand(0,10),
+        'votes' => rand(-3,10)
+    ];
+});
+
+3. to create the random data, go back to the command line and use tinker.
+
+4. run command php artisan tinker
+
+5. Once in tinker run the command below to genereate the fake data. The below will generate 3 emntries.
+factory(App\User::class, 3)->create()
+
