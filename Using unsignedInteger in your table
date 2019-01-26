@@ -1,0 +1,2 @@
+1. We will want tor ecord the number of times a question is viewed, so we will use $table->unsignedInteger('views')->default(0);
+This will make it so that when a question is created, it is assigned a default of 0.
