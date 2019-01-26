@@ -1,0 +1,13 @@
+1. protected $fillable is used so that we do not need to implment auto mapping in our application. Declarign our fillable items, will
+allow us to insert data and fetch only the data specified in the $fillable method. 
+
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Question extends Model
+{
+    protected $fillable = ['title', 'body'];
+}
