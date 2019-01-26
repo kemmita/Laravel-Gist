@@ -1,0 +1,23 @@
+1. To itterate over an array, you will use the below "->" syntax
+
+ @foreach($question as $question)
+                            <div class="media">
+                                <div class="media-body">
+                                    <h3 class="mt-0">{{$question->title}}</h3>
+                                    {{str_limit($question->body, 250)}}
+                                </div>
+                            </div>
+                            <hr>
+ @endforeach
+ 
+ 2. If you have to itterate over an object, you will use "['']"
+ 
+  @foreach($question as $question)
+                            <div class="media">
+                                <div class="media-body">
+                                    <h3 class="mt-0">{{$question['title']}}</h3>
+                                    {{str_limit($question['body'], 250)}}
+                                </div>
+                            </div>
+                            <hr>
+ @endforeach
