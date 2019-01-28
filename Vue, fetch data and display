@@ -1,0 +1,53 @@
+<template>
+    <div>
+       <button class="btn btn-primary btn-block">Add New Task</button>
+        <table class="table" v-if="tasks">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Body</th>
+                </tr>
+            </thead>
+            <tbody>
+
+// Here we use a for loop to itterate through every task in the db.
+            <tr v-for="(t, i) in tasks">
+                <td>{{i+1}}</td>
+                <td>{{t.name}}</td>
+                <td>{{t.body}}</td>
+                <td><button class="btn btn-info">Edit</button></td>
+                <td><button class="btn btn-danger">Delete</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <div v-else>
+            <p class="lead">No Tasks</p>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data(){
+            return {
+                //create an empty object that will be assigned data on the api call.
+                tasks: [],
+                //create a uri so that our template knows where to fetch the api data.
+                uri: 'http://127.0.0.1:8000/tasks'
+            }
+        },
+        methods: {
+          loadTasks(){
+              //we use axios to make the api call
+              axios.get(this.uri).then(response => {
+                    this.tasks = response.data.tasks;
+              });
+          }
+        },
+        //in mounted is where we instantiate specific methods on page load.
+        mounted() {
+            this.loadTasks();
+        }
+    }
+</script>
