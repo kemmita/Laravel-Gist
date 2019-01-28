@@ -1,0 +1,74 @@
+1. Several js based packages come prepackaged within laravel, and if ytou wish to see these, you can go to package.json
+
+    "devDependencies": {
+        "axios": "^0.18",
+        "bootstrap": "^4.0.0",
+        "cross-env": "^5.1",
+        "jquery": "^3.2",
+        "laravel-mix": "^4.0.7",
+        "lodash": "^4.17.5",
+        "popper.js": "^1.12",
+        "resolve-url-loader": "^2.3.1",
+        "sass": "^1.15.2",
+        "sass-loader": "^7.1.0",
+        "vue": "^2.5.17"
+    }
+
+2. To use any of the prepacked js components, we need only to run command npm install.  
+
+3. To create a vue component, go into resources/js/components and create a new vue file
+
+<template>
+    
+</template>
+
+<script>
+    export default {
+        name: "TaskComponent"
+    }
+</script>
+
+<style scoped>
+
+</style>
+
+4. We will need to register this component in order to use it, so head over to app.js and register it
+
+require('./bootstrap');
+
+window.Vue = require('vue');
+
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('task-component', require('./components/TaskComponent.vue').default);
+
+const app = new Vue({
+    el: '#app'
+});
+
+5. Now we can use the vue template tags direclty in our blades.
+
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Dashboard</div>
+
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <task-component></task-component>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+6. You will need to run npm run dev or npm run watch in order for the changes in the vue files to take action.
