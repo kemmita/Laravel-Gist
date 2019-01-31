@@ -1,0 +1,6 @@
+1. Below will enable us to grab only one of the items returned from the array, this can be helpful for displaying a specfic amount
+of items to the end user.
+
+@foreach(collect($coupons['results'])->take(1) as $coupon)
+                                    <h1>{{$coupon['discount_amount']}} here rusty</h1>
+@endforeach
