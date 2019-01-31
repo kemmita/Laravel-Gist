@@ -1,0 +1,10 @@
+1. ubuntu
+2. cd /etc
+3. cd nginx
+4. cd sites-available
+5. sudo vi stg.reviewsplus.co
+6. cd ..
+7. dir
+8. cd sites-enabled
+9. sudo vi stg.reviewsplus.co
+10. sudo service nginx restart
