@@ -1,0 +1,3 @@
+ @foreach($headers as $header)
+                        <td class="{{ $loop->first ? 'md:sticky-col' : 'text-center' }} {{$header['on'] ? 'showOnMobile' : 'hideOnMobile'}} p-4">{{ $header['content'] }}</td>
+ @endforeach
