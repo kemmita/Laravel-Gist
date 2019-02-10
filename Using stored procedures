@@ -1,0 +1,39 @@
+1. SQL inside of customers, we have three columns, we have id, name, and email
+
+#Database in use
+use larsql;
+
+DELIMITER :
+
+CREATE PROCEDURE ShowCustomers()
+begin
+select * from customers;
+end:
+
+
+call ShowCustomers();
+
+2. In our controller, we can obtain the data via the DB method 
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class dbtest extends Controller
+{
+    public function index(){
+        $tester = DB::select("CALL ShowCustomers()");
+        return view('dbtester')->with('tester', $tester);
+    }
+}
+
+3. In our view we need to use some json methods to parse our data.
+
+<?php $data = json_decode( json_encode($tester), true); ?>
+
+@foreach($data as $d)
+    <h1>{{$d['name']}}</h1>
+@endforeach
