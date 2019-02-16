@@ -45,7 +45,8 @@ const app = new Vue({
     el: '#app'
 });
 
-5. Now we can use the vue template tags direclty in our blades.
+5. Now we can use the vue template tags direclty in our blades but only if the blade is within the main div "#app" and 
+nothing will work if you do not run npm run dev or npm run watch.
 
 @extends('layouts.app')
 
@@ -71,4 +72,4 @@ const app = new Vue({
 </div>
 @endsection
 
-6. You will need to run npm run dev or npm run watch in order for the changes in the vue files to take action.
+**************6. You will need to run npm run dev or npm run watch in order for the changes in the vue files to take action.***********
