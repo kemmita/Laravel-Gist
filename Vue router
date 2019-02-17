@@ -1,0 +1,50 @@
+1.Inside of the main layout within the app div we can place router-view
+<div id="app">
+<div class="content">
+            <div class="container-fluid">
+                <router-view></router-view>
+            </div><!-- /.container-fluid -->
+        </div>
+</div>
+
+2. Now if we want to vie the files that our routed, our links must be placed outside of the router-view
+
+div id="app">
+<div class="content">
+         </div>
+                <div class="info">
+                    <router-link to="/profile" class="d-block">Profile</router-link>
+                    <router-link to="/dashboard" class="d-block">Dashboard</router-link>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <router-view></router-view>
+            </div><!-- /.container-fluid -->
+        </div>
+</div>
+
+3. make sure app.js looks like below and you can see the routes defined and linked to their respective components.
+
+require('./bootstrap');
+
+window.Vue = require('vue');
+
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+let routes = [
+    {path: '/dashboard', component: require('./components/Dashboard.vue').default},
+    {path: '/profile', component: require('./components/Profile-Component.vue').default}
+];
+
+const router = new VueRouter({
+   routes
+});
+
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+
+const app = new Vue({
+    el: '#app',
+    router
+});
