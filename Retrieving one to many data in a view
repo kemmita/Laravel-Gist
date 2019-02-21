@@ -1,0 +1,16 @@
+    public function index()
+    {
+        $bankUsers = BankUser::all();
+        return view('bank.index')->with('bankUsers', $bankUsers);
+    }
+    
+   
+
+
+// In the blade we need to use two foreach loops becuase the bank account is onetomany, meaning there could be many account funds
+   @foreach($bankUsers as $bank)
+        @foreach($bank->bankAccount as $account)
+             <h1>{{$bank->name}} {{$account->funds}}</h1>
+        @endforeach
+@endforeach
+    
