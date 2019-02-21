@@ -1,0 +1,16 @@
+1. Controller fetch wanted users
+
+ public function index()
+    {
+        $bankUsers = BankUser::findOrFail(1);
+        return view('bank.index')->with('bankUsers', $bankUsers);
+    }
+
+2. The 1to1 relation was established in the model prior, here in the view, we will grab onto that realtionship
+
+
+//here we just grab on to a column attached to our user in the db
+<h1>{{$bankUsers->name}}</h1>
+
+//here we reach out to our 1to1 bankAccount and grab onto the funds column.
+<h1>{{$bankUsers->bankAccount->funds}}</h1>
