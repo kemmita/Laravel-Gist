@@ -1,0 +1,28 @@
+1. Run command <npm install moment --save>
+2. In the vue script part of the template, we will want to instantiate moment
+
+<script>
+    var moment = require('moment');
+    export default {
+        props: ['coupons'],
+        data() {
+            return {
+                moment:moment
+            }
+        },
+
+        mounted() {
+            this.viethis();
+        },
+
+        methods: {
+            viethis: function () {
+                console.log(this.coupons);
+            }
+        }
+    }
+</script>
+
+3. Now in the template itself, we will format the code like so.
+
+<p v-if="c.expire != null" class="coupon-card-supplemental">Expires: <span class="text-grey">{{moment(c.expire).format('MM-DD-YYYY')}}</span></p>
